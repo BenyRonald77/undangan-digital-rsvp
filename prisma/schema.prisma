@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id        Int     @id @default(autoincrement())
+  nama      String
+  tanggal   String  // YYYY-MM-DD
+  jam       String  // HH:MM
+  lokasi    String
+  deskripsi String?
+  slug      String  @unique
+  tamu      Tamu[]
+}
+
+model Tamu {
+  id          Int       @id @default(autoincrement())
+  event_id    Int
+  event       Event     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  nama        String
+  no_wa       String    @default("")
+  token_unik  String    @unique
+  kategori    String    @default("Umum")
+  rsvp_status String    @default("pending") // pending | hadir | tidak
+  jumlah_hadir Int      @default(0)
+  checkin_at  String?   // timestamp ISO
+  wa_queue    WaQueue[]
+}
+
+model WaQueue {
+  id         Int     @id @default(autoincrement())
+  tamu_id    Int
+  tamu       Tamu    @relation(fields: [tamu_id], references: [id], onDelete: Cascade)
+  status     String  @default("pending") // pending | sent | failed
+  attempts   Int     @default(0)
+  last_error String?
+  sent_at    String? // timestamp ISO
+}
