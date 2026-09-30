@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Nav from "../Nav";
+import Nav from "../../Nav";
 import { formatTanggal, formatWaktu, rsvpLabel } from "@/lib/format";
 
 type Event = {

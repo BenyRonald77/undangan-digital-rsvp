@@ -12,7 +12,8 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: "tamu tidak ditemukan" }, { status: 404 });
   }
   const png = await buatQrPng(tamu.token_unik);
-  return new NextResponse(png, {
+  const bytes = Uint8Array.from(png); // ArrayBuffer-backed, valid BodyInit
+  return new Response(bytes, {
     headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" },
   });
 }
